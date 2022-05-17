@@ -1,10 +1,14 @@
-#include "rules_checker.h"
+#include "rules.h"
+#include "zero_op.h"
+#include "two_op.h"
+#include "three_op.h"
+#include "output.h"
 
 class Analyzer{
 private:
   string line;
-  //string opcodes[]={"add","addi","sub","subi","la","li","ecall"};
-  RulesChecker rules_check;
+  Rules *rules=nullptr;
+  Output *op_file=nullptr;
 
   void commentCheck(){
     if(line.length()>0 && line[0]=='#'){
@@ -19,40 +23,56 @@ private:
     }
   }
 
-  bool keywordCheck(){
-    if(line.length()==0) return true;
+  string keywordCheck(){
+    if(line.length()==0) return "";
+
+    //separate opcode
     string opcode = "";
     int i=0;
     for(;i<line.length() && line[i]!=' ';i++){
       opcode+=line[i];
     }
 
+    if(rules!=nullptr)
+      delete rules;
+
     if(opcode=="add" || opcode=="addi" || opcode =="sub" | opcode=="subi") {
-      return rules_check.three_op_check(line.substr(i,line.length()-1));
+      rules = new ThreeOperand();
+
     } else if(opcode=="la" || opcode=="li") {
-      return rules_check.two_op_check(line.substr(i,line.length()-1));
+      rules = new TwoOperand();
+
     } else if(opcode=="ecall") {
-      return rules_check.zero_op_check(line.substr(i,line.length()-1));
+      rules = new ZeroOperand();
+
     } else {
-      return false;
+      return "";
     }
+
+    rules->setValue(opcode,line.substr(i,line.length()-1));
+    return rules->check();
   }
 
 
 
 public:
+  Analyzer(string _output_file){
+    op_file = new Output(_output_file);
+  }
+
+  ~Analyzer(){
+    if(rules!=nullptr)
+      delete rules;
+    delete op_file;
+  }
 
   void analyze(string s){
     line = s;
     commentCheck();
 
     cout<<line<<endl;
-    if(keywordCheck()){
-      cout<<"Grammar right!\n";
-    } else {
-      cout<<"Grammar wrong!\n";
-    }
-
-    cout<<endl<<endl;
+    string temp = keywordCheck();
+    if(temp!="")
+      op_file->writeLine(temp);
   }
 };

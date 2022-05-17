@@ -1,5 +1,4 @@
 #include<iostream>
-#include<string>
 using namespace std;
 #include "input.h"
 #include "analyzer.h"
@@ -7,10 +6,9 @@ using namespace std;
 
 
 int main(){
-
   Input *i = new Input("../sampleInput.txt");
 
-  Analyzer *anz = new Analyzer("../output.txt");
+  Analyzer *anz = new Analyzer();
 
   while(!i->isEndOfFile()){
     anz->analyze(i->readLine());

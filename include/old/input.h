@@ -1,3 +1,4 @@
+#include<string>
 #include <fstream>
 
 class Input
@@ -15,7 +16,9 @@ public:
   }
 
   string readLine(){
+    //inputfile >> current_line;
     getline(inputfile, current_line);
+    //cout<<current_line<<"\n";
     return current_line;
   }
 

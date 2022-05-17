@@ -1,4 +1,6 @@
 #include<vector>
+#include <regex>
+
 class RulesChecker{
 
 private:
@@ -20,21 +22,58 @@ private:
     return res;
   }
 
+  string removeSpace(string s){
+    string f="";
+    for(int i=0;i<s.length();i++){
+      if(s[i]!=' ')
+        f+=s[i];
+    }
+    return f;
+  }
+
+  bool registerChecker(string s){
+    regex reg("[xa][0-9]+");
+    if(regex_match(s,reg)){
+      return true;
+    }
+    return false;
+  }
+
+  bool numberChecker(string s){
+    regex num("[0-9]+");
+
+    if(regex_match(s,num)){
+      return true;
+    }
+    return false;
+  }
+
+  bool validOperand(string s){
+    return registerChecker(s) || numberChecker(s);
+  }
 
 public:
   bool three_op_check(string s){
-    line = s;
+    line = removeSpace(s);
     words = split(line,",");
-    if(words.size()==3)
-      return true;
+    if(words.size()==3){
+      if(!registerChecker(words[0]))
+        return false;
+      if(validOperand(words[1]) && validOperand(words[2]))
+        return true;
+    }
     return false;
   }
 
   bool two_op_check(string s){
-    line = s;
+    line = removeSpace(s);
     words = split(line,",");
-    if(words.size()==2)
+    if(words.size()==2){
+      if(!registerChecker(words[0]))
+        return false;
       return true;
+    }
+
     return false;
   }
 
