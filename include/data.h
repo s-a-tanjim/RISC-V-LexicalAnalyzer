@@ -1,5 +1,6 @@
 #include<map>
 #include<string>
+#include<vector>
 #include "output.h"
 
 #pragma once
@@ -12,6 +13,7 @@ private:
   static map<string,int> all_var;
   static map<string,int> all_numb;
   static map<string,int> all_opcode;
+  static vector<string> expressions;
 public:
   Data(string _output_file){
     op = new Output(_output_file);
@@ -19,6 +21,17 @@ public:
 
   ~Data(){
     delete op;
+  }
+
+  static void storeExpression(string opcode, string exp1="", string exp2="", string exp3="") {
+    if(opcode=="add" || opcode=="addi")
+      expressions.push_back(exp1+" = "+exp2+" + "+exp3);
+    else if(opcode=="sub" || opcode=="subi")
+      expressions.push_back(exp1+" = "+exp2+" - "+exp3);
+    else if(opcode=="li" || opcode=="la")
+      expressions.push_back(exp1+" = "+exp2);
+    else if(opcode=="ecall")
+      expressions.push_back(";");
   }
 
   static void storeData(string type, string data) {
@@ -73,7 +86,11 @@ public:
     for (auto itr=all_numb.begin();itr!=all_numb.end();++itr) {
       op->writeLine(itr->first+"(" + to_string(itr->second) +")  ,");
     }
-    op->writeLine("\n\n");
+    op->writeLine("\n\n\n\n");
+
+    for(int i=0;i<expressions.size();i++){
+      op->writeLine(expressions[i]+"\n");
+    }
   }
 };
 
@@ -81,3 +98,4 @@ map<string, int>Data::all_reg;
 map<string, int>Data::all_var;
 map<string, int>Data::all_numb;
 map<string, int>Data::all_opcode;
+vector<string>Data::expressions;

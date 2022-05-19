@@ -64,6 +64,7 @@ private:
       for(int i=0;i<rules.size();i++) {
         Data::storeData(rules[i],operators[i]);
       }
+      Data::storeExpression(opcode,operators[0],operators.size()>1?operators[1]:"",operators.size()>2?operators[2]:"");
     } else { //Grammar is not okay
       return "";
     }

@@ -19,6 +19,5 @@ int main(){
   anz.saveData();
 
   cout<<"Datastructure is stored in 'output.txt' file\n";
-  //cout<<"And lexically analyzed output is stored in 'output.txt' file\n\n";
   return 0;
 }
