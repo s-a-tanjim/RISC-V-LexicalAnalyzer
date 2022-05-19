@@ -1,6 +1,8 @@
 #include<map>
 #include <fstream>
 
+#pragma once
+
 class DatastructureGenerator
 {
 private:

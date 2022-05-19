@@ -1,3 +1,5 @@
+#pragma once
+
 class ZeroOperand:public Rules
 {
 private:

@@ -1,5 +1,7 @@
 #include <fstream>
 
+#pragma once
+
 class Input
 {
 private:

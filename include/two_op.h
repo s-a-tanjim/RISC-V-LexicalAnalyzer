@@ -1,3 +1,5 @@
+#pragma once
+
 class TwoOperand:public Rules
 {
 private:

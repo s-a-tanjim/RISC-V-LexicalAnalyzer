@@ -1,5 +1,7 @@
 #include <fstream>
 
+#pragma once
+
 class Output
 {
 private:

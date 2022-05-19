@@ -4,6 +4,8 @@
 #include "three_op.h"
 #include "output.h"
 
+#pragma once
+
 class Analyzer{
 private:
   string line;

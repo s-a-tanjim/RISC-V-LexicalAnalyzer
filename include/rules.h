@@ -1,5 +1,6 @@
 #include<vector>
 #include <regex>
+#pragma once
 
 class Rules
 {
