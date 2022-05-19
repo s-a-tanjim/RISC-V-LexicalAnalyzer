@@ -5,10 +5,10 @@
 class Output
 {
 private:
-  string current_line;
   ofstream outputfile;
 public:
   Output(string file_name){
+    cout<<file_name<<endl;
     outputfile.open(file_name,ios::out);
   }
 
@@ -17,8 +17,8 @@ public:
   }
 
   void writeLine(string s){
-    current_line = s;
-     outputfile << current_line << endl;
+    cout<<s;
+    outputfile << s;
   }
 };
 

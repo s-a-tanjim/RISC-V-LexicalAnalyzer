@@ -1,18 +1,16 @@
+#include<vector>
 #include "rules.h"
-#include "zero_op.h"
-#include "two_op.h"
-#include "three_op.h"
-#include "output.h"
+#include "helper.h"
+#include "data.h"
 
 #pragma once
 
 class Analyzer{
 private:
   string line;
-  Rules *rules=nullptr;
-  Output *op_file=nullptr;
+  Data *d;
 
-  void commentCheck(){
+  void removeComment(){
     if(line.length()>0 && line[0]=='#'){
       line="";
     }
@@ -35,46 +33,61 @@ private:
       opcode+=line[i];
     }
 
-    if(rules!=nullptr)
-      delete rules;
+    //find if opcode is valid
+    auto itr = Rules::lexicalRules.find(opcode);
+    if(itr==Rules::lexicalRules.end())
+      return ""; // opcode is not valid
 
-    if(opcode=="add" || opcode=="addi" || opcode =="sub" | opcode=="subi") {
-      rules = new ThreeOperand();
+    string operand = Helper::operandsSeparator(line,i);
 
-    } else if(opcode=="la" || opcode=="li") {
-      rules = new TwoOperand();
+    return checkOperand(opcode,operand,itr->second);
+  }
 
-    } else if(opcode=="ecall") {
-      rules = new ZeroOperand();
+  string checkOperand(string opcode, string operand, string operand_rules){
+    vector<string> rules = Helper::split(operand_rules,",");
+    vector<string> operators = Helper::split(operand,",");
 
-    } else {
+    //If both size is not same then invalid syntax. ie: reg,reg,reg != x0,a0
+    if(rules.size()!=operators.size()) return "";
+
+    bool flag = 0;
+    for(int i=0;i<rules.size();i++){
+      bool res = Helper::operandMacher(rules[i],operators[i]);
+      if(!res) {
+        flag = 1;
+        break;
+      }
+    }
+
+    if(flag==0) { //Grammar is OK
+      Data::storeData("opcode",opcode);
+      for(int i=0;i<rules.size();i++) {
+        Data::storeData(rules[i],operators[i]);
+      }
+    } else { //Grammar is not okay
       return "";
     }
 
-    rules->setValue(opcode,line.substr(i,line.length()-1));
-    return rules->check();
+    return "";
   }
-
-
 
 public:
   Analyzer(string _output_file){
-    op_file = new Output(_output_file);
+    d = new Data(_output_file);
   }
 
   ~Analyzer(){
-    if(rules!=nullptr)
-      delete rules;
-    delete op_file;
+    delete d;
   }
 
   void analyze(string s){
     line = s;
-    commentCheck();
+    removeComment();
 
-    cout<<line<<endl;
     string temp = keywordCheck();
-    if(temp!="")
-      op_file->writeLine(temp);
+  }
+
+  void saveData(){
+    d->saveData();
   }
 };

@@ -1,4 +1,0 @@
-number	5, 5, 64
-opcode	add, la, li, addi, subi, ecall
-register	a0, x0, x1, a1, a3, a2, x0, a7, x0
-variable	hello
