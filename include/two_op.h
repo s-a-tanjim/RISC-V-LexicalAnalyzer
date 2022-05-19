@@ -10,10 +10,15 @@ public:
   }
 
   bool validOperand(string s){
-    if(opcode=="li") {
-      return numberChecker(s);
-    } else if(opcode=="la") {
-      return variableChecker(s);
+    if(opcode=="li" && numberChecker(s)) {
+      DatastructureGenerator::addData("opcode",opcode);
+      DatastructureGenerator::addData("number",s);
+      return true;
+
+    } else if(opcode=="la" && variableChecker(s)) {
+      DatastructureGenerator::addData("opcode",opcode);
+      DatastructureGenerator::addData("variable",s);
+      return true;
     }
     return false;
   }
@@ -30,6 +35,7 @@ public:
       if(!registerChecker(words[0]))
         return "";
         if(validOperand(words[1])) {
+          DatastructureGenerator::addData("register",words[0]);
           return words[0]+" = "+words[1];
         }
     }

@@ -21,8 +21,10 @@ public:
   }
 
   string check(){
-    if(validOperand(line))
+    if(validOperand(line)){
+      DatastructureGenerator::addData("opcode",opcode);
       return ";";
+    }
     else
       return "";
   }
